@@ -1,0 +1,38 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "Rechteck.txt"
+
+class Rechteck {
+	Rechteck();
+	public:
+		int x;
+		int y;
+		int Laenge;
+		int Breite;
+}
+struct Punkt {
+	public:
+		int x;
+		int y;
+}
+double flaeche(Rechteck r) {
+	flaeche = Rechteck.Laenge*Rechteck.Breite;
+	cout << flaeche; 
+}
+double flaeche = 0.0;
+
+int main() {
+Rechteck rechteck = new Rechteck();
+cout << "Please enter the length of the rectangle: ";
+cin >> rechteck.Laenge;
+cout << "Please enter the width of the rectangle: ";
+cin >> rechteck.Breite;
+cout << endl << "You entered: " << Rechteck.Laenge << " Width: " << Rechteck.Breite << endl;
+flaeche(rechteck);
+
+
+
+
+
+

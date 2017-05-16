@@ -1,0 +1,92 @@
+#include <iostream>
+#include <iomanip>
+#include <String>
+
+using namespace std;
+//=========================================================== Typ-Deklaration
+struct FachNote
+{
+  FachNote* naechsteFachNotePtr; // Verkettung
+  char fach[40];
+  int  ganze;
+  int  zehntel;
+};
+
+//============================================================= Hauptprogramm
+int main ()
+{
+  FachNote* ersteFachNotePtr = 0; // leere Liste
+
+  //--------------------------------------------------- Notenspiegel einlesen
+  cerr << "Fach und Note eingeben (Ende mit Strg-z):\n";
+
+  for (;;)
+  {
+    // Speicherplatz reservieren und Note einlesen:
+    FachNote* fachNotePtr = new FachNote;
+    char komma;
+
+    /* 1: hier die Note in den reservierten Speicherplatz einlesen */
+    std::cin >> fachNotePtr->fach >> fachNotePtr->ganze >> komma >> fachNotePtr->zehntel;
+
+
+    // Lesefehler behandeln:
+    if ((cin.fail()) || (komma != '.' && komma != ',') || fachNotePtr->zehntel > 99 || fachNotePtr->ganze > 5 ||
+    		(fachNotePtr->ganze >= 5 && fachNotePtr->zehntel > 0) || fachNotePtr->ganze < 1 || fachNotePtr->zehntel < 0)
+    {
+      delete fachNotePtr;
+
+      if (cin.eof() || cin.bad())
+      {
+        cerr << "Eingabeende\n";
+        break;
+      }
+
+      cerr << "Eingabefehler, Eingabe wiederholen: \n";
+      cin.clear();
+      char c;
+      while (cin.get(c) && c != '\n');
+
+      continue;
+    }
+
+    // neue Fachnote in Notenliste eintragen:
+
+    /* 2: hier Anweisungen schreiben, die die Note am Listenanfang einfuegen */
+    fachNotePtr->naechsteFachNotePtr = ersteFachNotePtr;
+    ersteFachNotePtr = fachNotePtr;
+
+
+
+  }
+
+  //--------------------------------------------------- Notenspiegel ausgeben
+  //------------------------------- sowie Durchschnitt errechnen und ausgeben
+  cout << "\nNOTENSPIEGEL:\n";
+
+  /* 3: hier eine Schleife schreiben, die alle Noten zeilenweise ausgibt */
+  double average = 0;
+  int counter = 0;
+  for(FachNote* fachNotePtr = ersteFachNotePtr; fachNotePtr != 0; fachNotePtr = fachNotePtr->naechsteFachNotePtr){
+	  cout << fachNotePtr->fach << " " << fachNotePtr->ganze << "," << fachNotePtr->zehntel << "\n";
+	  average += fachNotePtr->ganze*100 + fachNotePtr->zehntel;
+	  counter++;
+
+  }
+
+  cout << "Durchschnittsnote: " << (average/100)/counter;
+
+
+
+
+  //---------------------------------------------------- Notenliste freigeben
+
+  /* 4: hier eine Schleife schreiben, die den Speicher aller Noten freigibt */
+  while(ersteFachNotePtr != 0){
+	  FachNote* fn = ersteFachNotePtr;
+	  ersteFachNotePtr = ersteFachNotePtr->naechsteFachNotePtr;
+	  delete fn;
+  }
+  cin.get();
+  return 0;
+}

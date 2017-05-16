@@ -1,0 +1,111 @@
+#!/usr/bin/ksh
+#################################################
+# © Michael Bernhardt/Oliver Gasser		#
+# @HTWG Konstanz, 2015, Übung2 			#
+#################################################
+
+backupdir="$HOME/Desktop/backup"
+backupsource="$HOME"
+bool=0
+function usage
+{
+	print "Usage: backup -bd|-br|-r"
+	print " -br|-backupRange <directory>:	 	select the directory that you want to backup"
+	print " -bd|-backupDirectory <directory>: 	select the directory where your backup will be saved"
+	print " -r|-restore <name>: 			restores a backup with the given date"
+	print "	"
+}
+function verifyBackupDirectory
+{ 	
+	if [ $bool == 0 ]
+	then 	
+		if [ -d $backupdir ]
+		then
+			print "directory named '$backupdir' does already exist, proceeding!"
+		else
+			mkdir $backupdir
+		fi
+	else
+		print "backup will be saved to directory: '$backupdir'"
+	fi
+}
+function processBackup
+{
+	if [ -f backup_$(date +%Y_%m_%d_%H_%M_%S).tgz ]
+	then
+		print "Backup-File already exists."
+		exit 1
+	else
+		tar -czf "${backupdir}/backup_$(date +%Y_%m_%d_%H_%M_%S).tgz" "$backupsource" --exclude=$backupdir 2> errorlog
+	fi
+}
+function restoreBackup
+{
+	if [ $# == 1 ]
+		then
+			tar -xzf "$backupdir/$1" --directory="$backupdir" 2> errorlog
+			print "'$1' successfully restored to '$backupdir'" 
+	elif [ $# == 2 ]
+		then
+			tar -xzf "$backupdir/$1" --directory="$2" 2> errorlog
+			print "'$1' successfully restored to '$2'" 
+	else 
+	usage
+	exit 1
+	fi
+}
+if [ $# != 0 ]
+	then
+	if [[ $1 == "-h" || $1 == "--help" ]]
+		then 
+		usage
+		exit 0
+	fi
+	if [[ $1 == "-bd" || $2 == "-bd" || $3 == "-bd" || $1 == "--backupdir" || $2 == "--backupdir" || $3 == "--backupdir" ]]
+	then
+		if [[ $1 == "-bd" && -n $2 && -d $2 || $1 == "--backupdir" && -n $2 && -d $2 ]]
+			then
+			backupdir=$2
+		elif [[ $2 == "-bd" && -n $3 && -d $3 || $2 == "--backupdir" && -n $3 && -d $3 ]]
+			then
+			backupdir=$3
+		elif [[ $3 == "-bd" && -n $4 && -d $4 || $3 == "--backupdir" && -n $4 && -d $4 ]]
+			then
+			backupdir=$4
+		else
+			print "too few or wrong parameters passed"
+			usage
+			exit 1
+		fi
+		bool=1
+	fi
+	if [[ $1 == "-br" || $3 == "-br" || $1 == "--backuprange" || $3 == "--backuprange" ]]
+	then
+		if [[ $1 == "-br" && -d $2 || $1 == "--backuprange" && -d $2 ]]
+			then
+			backupsource=$2
+		elif [[ $3 == "-br" && -d $4 || $3 == "--backuprange" && -d $4 ]]
+			then
+			backupsource=$4
+		fi
+	fi
+	if [[ $1 == "-r" || $1 == "--restore" ]]
+		then
+		restoreBackup $2 $3
+		exit 0
+	elif [[ $3 == "-r" || $3 == "--restore" ]]
+		then
+		restoreBackup $4 $5
+		exit 0
+	fi
+	verifyBackupDirectory
+	processBackup
+	print "Backup successfully created and stored at the directory '$backupdir'"
+else
+	verifyBackupDirectory
+	processBackup
+	exit 0
+fi
+
+
+

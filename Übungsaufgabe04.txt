@@ -1,0 +1,77 @@
+// Besys Uebungsaufgabe 4: Notenspiegel mit verketteter Liste
+//
+// Liest die Namen von Faechern mit den zugehoerigen Noten
+// in eine verkettete Liste ein und gibt dann einen Notenspiegel aus.
+
+
+#include <iostream>
+#include <iomanip>
+
+
+//=========================================================== Typ-Deklaration
+struct FachNote
+{
+  FachNote *naechsteFachNotePtr; // Verkettung
+  char fach[40];
+  int  ganze;
+  int  zehntel;
+};
+
+//============================================================= Hauptprogramm
+int main ()
+{
+  FachNote *ersteFachNotePtr = 0; // leere Liste
+
+  //--------------------------------------------------- Notenspiegel einlesen
+  std::cerr << "Fach und Note eingeben (Ende mit Strg-z):\n";
+
+  for (;;)
+  {
+    // Speicherplatz reservieren und Note einlesen:
+    FachNote *fachNotePtr = new FachNote;
+    char komma;
+ 
+    /* 1: hier die Note in den reservierten Speicherplatz einlesen */
+
+
+
+    // Lesefehler behandeln:
+    if (std::cin.fail() || komma != '.' && komma != ',')
+    {
+      delete fachNotePtr;
+
+      if (std::cin.eof() || std::cin.bad())
+      {
+        std::cerr << "Eingabeende\n";
+        break;
+      }
+
+      std::cerr << "Eingabefehler\n";
+      std::cin.clear();
+      char c;
+      while (std::cin.get(c) && c != '\n');
+
+      continue;
+    }
+
+    // neue Fachnote in Notenliste eintragen:
+
+    /* 2: hier Anweisungen schreiben, die die Note am Listenanfang einfuegen */
+
+
+
+  }
+
+  //--------------------------------------------------- Notenspiegel ausgeben
+  //------------------------------- sowie Durchschnitt errechnen und ausgeben
+  std::cout << "\nNOTENSPIEGEL:\n";
+
+  /* 3: hier eine Schleife schreiben, die alle Noten zeilenweise ausgibt */
+
+
+
+  //---------------------------------------------------- Notenliste freigeben
+
+  /* 4: hier eine Schleife schreiben, die den Speicher aller Noten freigibt */
+  std::cin.get();
+} // main

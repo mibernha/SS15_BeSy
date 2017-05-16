@@ -1,0 +1,46 @@
+#!/usr/bin/ksh
+#################################################
+# © Michael Bernhardt/Oliver Gasser		#
+# @HTWG Konstanz, 2015, Übung1 			#
+#################################################
+
+function usage
+{
+	print "unknown Parameter '$1' passed."
+	print -n "Would you like to see further usage information? j/n "
+	read var
+	if [ $var == "j" ] || [ $var == "J" ]
+		then
+		print "Usage: checkfile -d|-f <name>"
+		print "	Verifies the existence of the passed file or directory <name>"
+		print "	"
+		print "	-d Verifies a directory"
+		print "	-f Verifies a regular file"
+		else
+		print "The script is exiting now. Bye!"
+		exit 1
+	fi
+}
+
+if [ $1 == "-d" ]
+	then
+	if [ -d $2 ]
+		then	
+			print "directory '$2' found"
+			exit 0
+		else	
+			print "'$2' is no directory"
+	fi
+elif [ $1 == "-f" ]
+	then
+	if [ -f $2 ]
+		then	
+			print "file '$2' found"
+			exit 0
+		else 	
+			print "'$2' is no regular file"
+	fi
+else 
+	usage $1
+fi
+
