@@ -1,2 +1,2 @@
 # SS15_BeSy
-Betriebssysteme, alle Aufgaben
+Betriebssysteme, alle Aufgaben (Kein Gewähr auf Richtigkeit!)
